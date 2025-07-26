@@ -11,6 +11,7 @@ const Index = () => {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
+
   const handleIdeaSubmitted = () => {
     setRefreshTrigger(prev => prev + 1);
   };
@@ -43,7 +44,7 @@ const Index = () => {
               </p>
               
               {/* Auth section */}
-              {user ? (
+              {user && (
                 <div className="flex items-center justify-center gap-4">
                   <span className="text-sm text-muted-foreground">
                     Bienvenido, {user.email}
@@ -53,27 +54,11 @@ const Index = () => {
                     Cerrar sesión
                   </Button>
                 </div>
-              ) : (
-                <Button onClick={() => setAuthModalOpen(true)}>
-                  Iniciar sesión para enviar ideas
-                </Button>
               )}
             </div>
 
             {/* Form Section */}
-            {user ? (
-              <IdeaForm onIdeaSubmitted={handleIdeaSubmitted} />
-            ) : (
-              <div className="bg-muted/50 border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center">
-                <h3 className="text-lg font-medium mb-2">¿Tienes una idea?</h3>
-                <p className="text-muted-foreground mb-4">
-                  Inicia sesión para enviar tus propuestas de vídeos
-                </p>
-                <Button onClick={() => setAuthModalOpen(true)}>
-                  Iniciar sesión
-                </Button>
-              </div>
-            )}
+            <IdeaForm onIdeaSubmitted={handleIdeaSubmitted} />
           </div>
 
           {/* Right Column - Ideas Board */}

@@ -36,7 +36,6 @@ export const IdeaForm = ({ onIdeaSubmitted }: IdeaFormProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
 
     setSubmitting(true);
     
@@ -76,19 +75,15 @@ export const IdeaForm = ({ onIdeaSubmitted }: IdeaFormProps) => {
     }
   };
 
-  if (!user) {
-    return null;
-  }
-
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Envía tu idea de vídeo</CardTitle>
+        <CardTitle>¿Qué vídeo quieres?</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="title">Título del vídeo *</Label>
+            <Label htmlFor="title">Título*</Label>
             <Input
               id="title"
               value={title}
@@ -99,7 +94,7 @@ export const IdeaForm = ({ onIdeaSubmitted }: IdeaFormProps) => {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="description">Descripción detallada *</Label>
+            <Label htmlFor="description">Descripción*</Label>
             <Textarea
               id="description"
               value={description}
