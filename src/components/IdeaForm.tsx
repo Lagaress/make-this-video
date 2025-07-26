@@ -11,9 +11,10 @@ import { Plus, X } from 'lucide-react';
 
 interface IdeaFormProps {
   onIdeaSubmitted: () => void;
+  onOpenAuthModal: () => void;
 }
 
-export const IdeaForm = ({ onIdeaSubmitted }: IdeaFormProps) => {
+export const IdeaForm = ({ onIdeaSubmitted, onOpenAuthModal }: IdeaFormProps) => {
   const { user } = useAuth();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -36,6 +37,12 @@ export const IdeaForm = ({ onIdeaSubmitted }: IdeaFormProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Si el usuario no está logueado, abrir modal de auth
+    if (!user) {
+      onOpenAuthModal();
+      return;
+    }
 
     setSubmitting(true);
     

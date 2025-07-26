@@ -58,7 +58,7 @@ const Index = () => {
             </div>
 
             {/* Form Section */}
-            <IdeaForm onIdeaSubmitted={handleIdeaSubmitted} />
+            <IdeaForm onIdeaSubmitted={handleIdeaSubmitted} onOpenAuthModal={() => setAuthModalOpen(true)} />
           </div>
 
           {/* Right Column - Ideas Board */}
