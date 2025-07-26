@@ -14,6 +14,7 @@ interface Idea {
   reference_links: string[] | null;
   created_at: string;
   user_id: string;
+  status: 'pending' | 'in_progress' | 'completed' | 'rejected';
 }
 
 interface IdeaCardProps {
@@ -73,6 +74,36 @@ export const IdeaCard = ({ idea, voteCount, hasUserVoted, onVoteChange }: IdeaCa
     }
   };
 
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case 'pending':
+        return 'Pendiente';
+      case 'in_progress':
+        return 'En progreso';
+      case 'completed':
+        return 'Completado';
+      case 'rejected':
+        return 'Rechazado';
+      default:
+        return 'Pendiente';
+    }
+  };
+
+  const getStatusVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
+    switch (status) {
+      case 'pending':
+        return 'secondary';
+      case 'in_progress':
+        return 'default';
+      case 'completed':
+        return 'outline';
+      case 'rejected':
+        return 'destructive';
+      default:
+        return 'secondary';
+    }
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('es-ES', {
       year: 'numeric',
@@ -86,9 +117,14 @@ export const IdeaCard = ({ idea, voteCount, hasUserVoted, onVoteChange }: IdeaCa
       <CardHeader>
         <div className="flex justify-between items-start gap-4">
           <CardTitle className="text-lg leading-tight">{idea.title}</CardTitle>
-          <Badge variant="secondary" className="shrink-0">
-            {formatDate(idea.created_at)}
-          </Badge>
+          <div className="flex flex-col gap-2 shrink-0">
+            <Badge variant={getStatusVariant(idea.status)}>
+              {getStatusLabel(idea.status)}
+            </Badge>
+            <Badge variant="secondary">
+              {formatDate(idea.created_at)}
+            </Badge>
+          </div>
         </div>
       </CardHeader>
       

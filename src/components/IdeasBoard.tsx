@@ -10,6 +10,7 @@ interface Idea {
   reference_links: string[] | null;
   created_at: string;
   user_id: string;
+  status: 'pending' | 'in_progress' | 'completed' | 'rejected';
 }
 
 interface IdeaWithVotes extends Idea {
@@ -37,7 +38,8 @@ export const IdeasBoard = ({ refreshTrigger }: IdeasBoardProps) => {
           description,
           reference_links,
           created_at,
-          user_id
+          user_id,
+          status
         `)
         .order('created_at', { ascending: false });
 

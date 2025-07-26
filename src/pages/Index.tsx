@@ -28,44 +28,39 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-card">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex flex-col items-center text-center mb-6">
-            <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center mb-4">
-              <span className="text-2xl font-bold text-primary-foreground">AT</span>
-            </div>
-            <h1 className="text-3xl font-bold mb-2">AlpacaTech</h1>
-            <p className="text-muted-foreground max-w-2xl">
-              ¡Ayúdanos a crear el contenido que quieres ver! Envía tus ideas para vídeos y vota por las propuestas que más te gusten.
-            </p>
-          </div>
-          
-          <div className="flex justify-center">
-            {user ? (
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-muted-foreground">
-                  Bienvenido, {user.email}
-                </span>
-                <Button onClick={signOut} variant="outline" size="sm">
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Cerrar sesión
-                </Button>
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-screen">
+          {/* Left Column - Channel Info + Form */}
+          <div className="space-y-6">
+            {/* Channel Header */}
+            <div className="text-center">
+              <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-primary-foreground">AT</span>
               </div>
-            ) : (
-              <Button onClick={() => setAuthModalOpen(true)}>
-                Iniciar sesión para enviar ideas
-              </Button>
-            )}
-          </div>
-        </div>
-      </header>
+              <h1 className="text-3xl font-bold mb-2">AlpacaTech</h1>
+              <p className="text-muted-foreground max-w-md mx-auto mb-6">
+                ¡Ayúdanos a crear el contenido que quieres ver! Envía tus ideas para vídeos y vota por las propuestas que más te gusten.
+              </p>
+              
+              {/* Auth section */}
+              {user ? (
+                <div className="flex items-center justify-center gap-4">
+                  <span className="text-sm text-muted-foreground">
+                    Bienvenido, {user.email}
+                  </span>
+                  <Button onClick={signOut} variant="outline" size="sm">
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Cerrar sesión
+                  </Button>
+                </div>
+              ) : (
+                <Button onClick={() => setAuthModalOpen(true)}>
+                  Iniciar sesión para enviar ideas
+                </Button>
+              )}
+            </div>
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Form */}
-          <div className="lg:col-span-1">
+            {/* Form Section */}
             {user ? (
               <IdeaForm onIdeaSubmitted={handleIdeaSubmitted} />
             ) : (
@@ -82,8 +77,8 @@ const Index = () => {
           </div>
 
           {/* Right Column - Ideas Board */}
-          <div className="lg:col-span-2">
-            <div className="mb-6">
+          <div className="space-y-6">
+            <div>
               <h2 className="text-2xl font-bold mb-2">Ideas de la comunidad</h2>
               <p className="text-muted-foreground">
                 Vota por las ideas que más te gusten para que tengan prioridad
@@ -92,7 +87,7 @@ const Index = () => {
             <IdeasBoard refreshTrigger={refreshTrigger} />
           </div>
         </div>
-      </main>
+      </div>
 
       <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
     </div>
