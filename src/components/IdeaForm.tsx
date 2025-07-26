@@ -1,0 +1,154 @@
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
+import { toast } from '@/hooks/use-toast';
+import { Plus, X } from 'lucide-react';
+
+interface IdeaFormProps {
+  onIdeaSubmitted: () => void;
+}
+
+export const IdeaForm = ({ onIdeaSubmitted }: IdeaFormProps) => {
+  const { user } = useAuth();
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [links, setLinks] = useState<string[]>(['']);
+  const [submitting, setSubmitting] = useState(false);
+
+  const addLinkField = () => {
+    setLinks([...links, '']);
+  };
+
+  const removeLinkField = (index: number) => {
+    setLinks(links.filter((_, i) => i !== index));
+  };
+
+  const updateLink = (index: number, value: string) => {
+    const newLinks = [...links];
+    newLinks[index] = value;
+    setLinks(newLinks);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) return;
+
+    setSubmitting(true);
+    
+    try {
+      const validLinks = links.filter(link => link.trim() !== '');
+      
+      const { error } = await supabase
+        .from('ideas')
+        .insert({
+          title: title.trim(),
+          description: description.trim(),
+          reference_links: validLinks.length > 0 ? validLinks : null,
+          user_id: user.id,
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "¡Idea enviada!",
+        description: "Tu idea ha sido publicada correctamente.",
+      });
+
+      // Reset form
+      setTitle('');
+      setDescription('');
+      setLinks(['']);
+      onIdeaSubmitted();
+      
+    } catch (error: any) {
+      toast({
+        title: "Error al enviar la idea",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (!user) {
+    return null;
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Envía tu idea de vídeo</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="title">Título del vídeo *</Label>
+            <Input
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Ej: Tutorial de React con Hooks"
+              required
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="description">Descripción detallada *</Label>
+            <Textarea
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Explica tu idea en detalle: qué quieres que cubra el vídeo, por qué sería útil, etc."
+              rows={4}
+              required
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label>Enlaces de referencia (opcional)</Label>
+            {links.map((link, index) => (
+              <div key={index} className="flex gap-2">
+                <Input
+                  value={link}
+                  onChange={(e) => updateLink(index, e.target.value)}
+                  placeholder="https://youtube.com/watch?v=..."
+                  type="url"
+                />
+                {links.length > 1 && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => removeLinkField(index)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={addLinkField}
+              className="w-full"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Añadir enlace
+            </Button>
+          </div>
+          
+          <Button type="submit" disabled={submitting} className="w-full">
+            {submitting ? 'Enviando...' : 'Enviar idea'}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
+  );
+};
