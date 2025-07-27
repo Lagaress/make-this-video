@@ -30,6 +30,29 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      {/* Top Header - Auth Section */}
+      <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex justify-end">
+            {user ? (
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-muted-foreground">
+                  Bienvenido, {user.email}
+                </span>
+                <Button onClick={signOut} variant="default" size="sm">
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Cerrar sesión
+                </Button>
+              </div>
+            ) : (
+              <Button onClick={() => setAuthModalOpen(true)} variant="default" size="sm">
+                Iniciar sesión
+              </Button>
+            )}
+          </div>
+        </div>
+      </div>
+      
       <div className="container mx-auto px-4 py-8 flex-1">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-full">
           {/* Left Column - Channel Info + Form */}
@@ -52,19 +75,6 @@ const Index = () => {
               <p className="text-muted-foreground max-w-md mx-auto mb-6">
               ¡Ayúdame a crear el contenido que (realmente) quieres ver!
               </p>
-              
-              {/* Auth section */}
-              {user && (
-                <div className="flex items-center justify-center gap-4">
-                  <span className="text-sm text-muted-foreground">
-                    Bienvenido, {user.email}
-                  </span>
-                  <Button onClick={signOut} variant="outline" size="sm">
-                    <LogOut className="h-4 w-4 mr-2" />
-                    Cerrar sesión
-                  </Button>
-                </div>
-              )}
             </div>
 
             {/* Form Section - Solo para usuarios regulares */}
