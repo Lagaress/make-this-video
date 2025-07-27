@@ -20,9 +20,10 @@ interface IdeaWithVotes extends Idea {
 
 interface IdeasBoardProps {
   refreshTrigger: number;
+  onOpenAuthModal: () => void;
 }
 
-export const IdeasBoard = ({ refreshTrigger }: IdeasBoardProps) => {
+export const IdeasBoard = ({ refreshTrigger, onOpenAuthModal }: IdeasBoardProps) => {
   const { user } = useAuth();
   const [ideas, setIdeas] = useState<IdeaWithVotes[]>([]);
   const [loading, setLoading] = useState(true);
@@ -115,6 +116,7 @@ export const IdeasBoard = ({ refreshTrigger }: IdeasBoardProps) => {
           voteCount={idea.vote_count}
           hasUserVoted={idea.user_has_voted}
           onVoteChange={fetchIdeas}
+          onOpenAuthModal={onOpenAuthModal}
         />
       ))}
     </div>

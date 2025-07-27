@@ -82,7 +82,7 @@ const Index = () => {
                 Vota por las ideas que más te gusten para que tengan prioridad
               </p>
             </div>
-            <IdeasBoard refreshTrigger={refreshTrigger} />
+            <IdeasBoard refreshTrigger={refreshTrigger} onOpenAuthModal={() => setAuthModalOpen(true)} />
           </div>
         </div>
       </div>

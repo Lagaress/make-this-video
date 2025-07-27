@@ -23,9 +23,10 @@ interface IdeaCardProps {
   voteCount: number;
   hasUserVoted: boolean;
   onVoteChange: () => void;
+  onOpenAuthModal: () => void;
 }
 
-export const IdeaCard = ({ idea, voteCount, hasUserVoted, onVoteChange }: IdeaCardProps) => {
+export const IdeaCard = ({ idea, voteCount, hasUserVoted, onVoteChange, onOpenAuthModal }: IdeaCardProps) => {
   const { user, isAdmin } = useAuth();
   const [voting, setVoting] = useState(false);
   const [currentStatus, setCurrentStatus] = useState(idea.status);
@@ -46,7 +47,7 @@ export const IdeaCard = ({ idea, voteCount, hasUserVoted, onVoteChange }: IdeaCa
         title: "Estado actualizado",
         description: `La idea ha sido marcada como ${getStatusLabel(newStatus)}`,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
         description: "No se pudo actualizar el estado de la idea",
@@ -57,11 +58,7 @@ export const IdeaCard = ({ idea, voteCount, hasUserVoted, onVoteChange }: IdeaCa
 
   const handleVote = async () => {
     if (!user) {
-      toast({
-        title: "Inicia sesión",
-        description: "Necesitas iniciar sesión para votar.",
-        variant: "destructive",
-      });
+      onOpenAuthModal();
       return;
     }
 
@@ -90,10 +87,10 @@ export const IdeaCard = ({ idea, voteCount, hasUserVoted, onVoteChange }: IdeaCa
       }
       
       onVoteChange();
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error al votar",
-        description: error.message,
+        description: error instanceof Error ? error.message : "Error desconocido",
         variant: "destructive",
       });
     } finally {
