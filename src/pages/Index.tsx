@@ -39,7 +39,16 @@ const Index = () => {
               <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-primary-foreground">AT</span>
               </div>
-              <h1 className="text-3xl font-bold mb-2">AlpacaTech</h1>
+              <a
+                href="https://www.youtube.com/@alpacatech"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block text-muted-foreground"
+              >
+                <h1 className="text-3xl font-bold mb-2 hover:underline">
+                  AlpacaTech
+                </h1>
+              </a>
               <p className="text-muted-foreground max-w-md mx-auto mb-6">
               ¡Ayúdame a crear el contenido que (realmente) quieres ver!
               </p>

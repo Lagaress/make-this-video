@@ -71,10 +71,11 @@ export const IdeaForm = ({ onIdeaSubmitted, onOpenAuthModal }: IdeaFormProps) =>
       setLinks(['']);
       onIdeaSubmitted();
       
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Ocurrió un error inesperado';
       toast({
         title: "Error al enviar la idea",
-        description: error.message,
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {

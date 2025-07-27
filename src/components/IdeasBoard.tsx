@@ -101,7 +101,15 @@ export const IdeasBoard = ({ refreshTrigger, onOpenAuthModal }: IdeasBoardProps)
       <div className="text-center py-12">
         <h3 className="text-lg font-medium mb-2">No hay ideas todavía</h3>
         <p className="text-muted-foreground">
-          ¡Sé el primero en enviar una idea para un vídeo de AlpacaTech!
+          ¡Sé el primero en enviar una idea para un vídeo de AlpacaTech!<br />
+          <a
+            href="https://www.youtube.com/@alpacatech"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary underline hover:text-primary/80"
+          >
+            Visita nuestro canal de YouTube
+          </a>
         </p>
       </div>
     );

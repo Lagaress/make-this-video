@@ -4,10 +4,20 @@ export const Footer = () => {
       <div className="container mx-auto px-4 py-6">
         <div className="text-center text-sm text-muted-foreground">
           <p>
-            © 2024 AlpacaTech. Todos los derechos reservados. 
+            © 2025{" "}
+            <a
+              href="https://www.youtube.com/@alpacatech"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              AlpacaTech
+            </a>
+            . Todos los derechos reservados. 
+            <br />
             <a 
               href="/privacy" 
-              className="ml-2 text-primary hover:underline"
+              className="hover:underline"
             >
               Política de Privacidad
             </a>
