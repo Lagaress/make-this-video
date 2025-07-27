@@ -41,7 +41,7 @@ const Index = () => {
               </div>
               <h1 className="text-3xl font-bold mb-2">AlpacaTech</h1>
               <p className="text-muted-foreground max-w-md mx-auto mb-6">
-                ¡Ayúdanos a crear el contenido que quieres ver! Envía tus ideas para vídeos y vota por las propuestas que más te gusten.
+              ¡Ayúdame a crear el contenido que (realmente) quieres ver!
               </p>
               
               {/* Auth section */}
@@ -77,9 +77,9 @@ const Index = () => {
           {/* Right Column - Ideas Board */}
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold mb-2">Ideas de la comunidad</h2>
+              <h2 className="text-2xl font-bold mb-2">Ideas</h2>
               <p className="text-muted-foreground">
-                Vota por las ideas que más te gusten para que tengan prioridad
+                Vota por las ideas que más te gusten (porque puede que las haga ;)
               </p>
             </div>
             <IdeasBoard refreshTrigger={refreshTrigger} onOpenAuthModal={() => setAuthModalOpen(true)} />

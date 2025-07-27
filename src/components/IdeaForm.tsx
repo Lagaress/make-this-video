@@ -106,7 +106,7 @@ export const IdeaForm = ({ onIdeaSubmitted, onOpenAuthModal }: IdeaFormProps) =>
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Explica tu idea en detalle: qué quieres que cubra el vídeo, por qué sería útil, etc."
+              placeholder="Ej: Me gustaría un tutorial paso a paso sobre cómo crear un sistema de autenticación completo en React. Sería genial que cubra desde la configuración inicial hasta la implementación de login, registro y protección de rutas. Muchos desarrolladores tenemos dudas sobre las mejores prácticas y este tema siempre genera interés."
               rows={4}
               required
             />
