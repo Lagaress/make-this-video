@@ -8,7 +8,7 @@ import { Footer } from '@/components/Footer';
 import { LogOut } from 'lucide-react';
 
 const Index = () => {
-  const { user, signOut, loading } = useAuth();
+  const { user, signOut, loading, isAdmin } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
@@ -58,8 +58,20 @@ const Index = () => {
               )}
             </div>
 
-            {/* Form Section */}
-            <IdeaForm onIdeaSubmitted={handleIdeaSubmitted} onOpenAuthModal={() => setAuthModalOpen(true)} />
+            {/* Form Section - Solo para usuarios regulares */}
+            {!isAdmin && (
+              <IdeaForm onIdeaSubmitted={handleIdeaSubmitted} onOpenAuthModal={() => setAuthModalOpen(true)} />
+            )}
+            
+            {/* Admin message */}
+            {isAdmin && (
+              <div className="text-center p-6 bg-muted/50 rounded-lg">
+                <h3 className="text-lg font-semibold mb-2">Panel de Administración</h3>
+                <p className="text-muted-foreground">
+                  Como administrador, puedes gestionar el estado de las ideas desde la lista de la derecha.
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Right Column - Ideas Board */}

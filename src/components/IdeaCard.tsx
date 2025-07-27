@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowUp, ExternalLink } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -25,8 +26,34 @@ interface IdeaCardProps {
 }
 
 export const IdeaCard = ({ idea, voteCount, hasUserVoted, onVoteChange }: IdeaCardProps) => {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const [voting, setVoting] = useState(false);
+  const [currentStatus, setCurrentStatus] = useState(idea.status);
+
+  const updateStatus = async (newStatus: string) => {
+    const validStatus = newStatus as 'pending' | 'in_progress' | 'completed' | 'rejected';
+    
+    try {
+      const { error } = await supabase
+        .from('ideas')
+        .update({ status: validStatus })
+        .eq('id', idea.id);
+
+      if (error) throw error;
+
+      setCurrentStatus(validStatus);
+      toast({
+        title: "Estado actualizado",
+        description: `La idea ha sido marcada como ${getStatusLabel(newStatus)}`,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: "No se pudo actualizar el estado de la idea",
+        variant: "destructive",
+      });
+    }
+  };
 
   const handleVote = async () => {
     if (!user) {
@@ -118,9 +145,24 @@ export const IdeaCard = ({ idea, voteCount, hasUserVoted, onVoteChange }: IdeaCa
         <div className="flex justify-between items-start gap-4">
           <CardTitle className="text-lg leading-tight">{idea.title}</CardTitle>
           <div className="flex flex-col gap-2 shrink-0">
-            <Badge variant={getStatusVariant(idea.status)}>
-              {getStatusLabel(idea.status)}
-            </Badge>
+            {/* Estado - Badge para usuarios, Select para admins */}
+            {isAdmin ? (
+              <Select value={currentStatus} onValueChange={updateStatus}>
+                <SelectTrigger className="w-32">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="pending">Pendiente</SelectItem>
+                  <SelectItem value="in_progress">En progreso</SelectItem>
+                  <SelectItem value="completed">Completado</SelectItem>
+                  <SelectItem value="rejected">Rechazado</SelectItem>
+                </SelectContent>
+              </Select>
+            ) : (
+              <Badge variant={getStatusVariant(currentStatus)}>
+                {getStatusLabel(currentStatus)}
+              </Badge>
+            )}
             <Badge variant="secondary">
               {formatDate(idea.created_at)}
             </Badge>
@@ -151,16 +193,26 @@ export const IdeaCard = ({ idea, voteCount, hasUserVoted, onVoteChange }: IdeaCa
       </CardContent>
       
       <CardFooter>
-        <Button
-          variant={hasUserVoted ? "default" : "outline"}
-          size="sm"
-          onClick={handleVote}
-          disabled={voting}
-          className="flex items-center gap-2"
-        >
-          <ArrowUp className="h-4 w-4" />
-          {voteCount} {voteCount === 1 ? 'voto' : 'votos'}
-        </Button>
+        {/* Solo mostrar votación para usuarios regulares */}
+        {!isAdmin && (
+          <Button
+            variant={hasUserVoted ? "default" : "outline"}
+            size="sm"
+            onClick={handleVote}
+            disabled={voting}
+            className="flex items-center gap-2"
+          >
+            <ArrowUp className="h-4 w-4" />
+            {voteCount} {voteCount === 1 ? 'voto' : 'votos'}
+          </Button>
+        )}
+        
+        {/* Mensaje para admins */}
+        {isAdmin && (
+          <div className="text-sm text-muted-foreground">
+            Gestión administrativa - {voteCount} {voteCount === 1 ? 'voto' : 'votos'}
+          </div>
+        )}
       </CardFooter>
     </Card>
   );
