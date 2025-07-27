@@ -3,7 +3,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowUp, ExternalLink } from 'lucide-react';
+import { ArrowUp, ExternalLink, Star, Clock, CheckCircle, XCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
@@ -98,6 +98,21 @@ export const IdeaCard = ({ idea, voteCount, hasUserVoted, onVoteChange, onOpenAu
     }
   };
 
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'pending':
+        return <Star className="h-3 w-3" />;
+      case 'in_progress':
+        return <Clock className="h-3 w-3" />;
+      case 'completed':
+        return <CheckCircle className="h-3 w-3" />;
+      case 'rejected':
+        return <XCircle className="h-3 w-3" />;
+      default:
+        return <Star className="h-3 w-3" />;
+    }
+  };
+
   const getStatusLabel = (status: string) => {
     switch (status) {
       case 'pending':
@@ -145,18 +160,39 @@ export const IdeaCard = ({ idea, voteCount, hasUserVoted, onVoteChange, onOpenAu
             {/* Estado - Badge para usuarios, Select para admins */}
             {isAdmin ? (
               <Select value={currentStatus} onValueChange={updateStatus}>
-                <SelectTrigger className="w-32">
+                <SelectTrigger className="w-36">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="pending">Pendiente</SelectItem>
-                  <SelectItem value="in_progress">En progreso</SelectItem>
-                  <SelectItem value="completed">Completado</SelectItem>
-                  <SelectItem value="rejected">Rechazado</SelectItem>
+                  <SelectItem value="pending">
+                    <div className="flex items-center gap-2">
+                      <Star className="h-3 w-3" />
+                      Pendiente
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="in_progress">
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-3 w-3" />
+                      En progreso
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="completed">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-3 w-3" />
+                      Completado
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="rejected">
+                    <div className="flex items-center gap-2">
+                      <XCircle className="h-3 w-3" />
+                      Rechazado
+                    </div>
+                  </SelectItem>
                 </SelectContent>
               </Select>
             ) : (
-              <Badge variant={getStatusVariant(currentStatus)}>
+              <Badge variant={getStatusVariant(currentStatus)} className="flex items-center gap-1">
+                {getStatusIcon(currentStatus)}
                 {getStatusLabel(currentStatus)}
               </Badge>
             )}
