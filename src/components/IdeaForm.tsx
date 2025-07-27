@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useRateLimit } from '@/hooks/useRateLimit';
 import { toast } from '@/hooks/use-toast';
 import { Plus, X } from 'lucide-react';
 
@@ -16,6 +17,10 @@ interface IdeaFormProps {
 
 export const IdeaForm = ({ onIdeaSubmitted, onOpenAuthModal }: IdeaFormProps) => {
   const { user } = useAuth();
+  const { checkRateLimit, recordAttempt } = useRateLimit(user?.id || null, {
+    maxAttempts: 5,
+    windowMs: 60 * 1000, // 1 minuto
+  });
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [links, setLinks] = useState<string[]>(['']);
@@ -44,6 +49,17 @@ export const IdeaForm = ({ onIdeaSubmitted, onOpenAuthModal }: IdeaFormProps) =>
       return;
     }
 
+    // Verificar rate limit
+    const { allowed, remainingTime } = checkRateLimit();
+    if (!allowed) {
+      toast({
+        title: "¡Espera un momento!",
+        description: `Has enviado demasiadas ideas recientemente. Espera ${remainingTime} segundos antes de enviar otra.`,
+        variant: "destructive",
+      });
+      return;
+    }
+
     setSubmitting(true);
     
     try {
@@ -59,6 +75,9 @@ export const IdeaForm = ({ onIdeaSubmitted, onOpenAuthModal }: IdeaFormProps) =>
         });
 
       if (error) throw error;
+
+      // Registrar el intento exitoso para el rate limiting
+      recordAttempt();
 
       toast({
         title: "¡Idea enviada!",
