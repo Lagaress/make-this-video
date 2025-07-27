@@ -59,8 +59,12 @@ const Index = () => {
           <div className="space-y-6">
             {/* Channel Header */}
             <div className="text-center">
-              <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-primary-foreground">AT</span>
+              <div className="w-24 h-24 mx-auto">
+                <img 
+                  src="/logo.png" 
+                  alt="AlpacaTech Logo" 
+                  className="w-full h-full object-contain"
+                />
               </div>
               <a
                 href="https://www.youtube.com/@alpacatech"
