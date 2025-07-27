@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { AuthModal } from '@/components/AuthModal';
 import { IdeaForm } from '@/components/IdeaForm';
 import { IdeasBoard } from '@/components/IdeasBoard';
+import { Footer } from '@/components/Footer';
 import { LogOut } from 'lucide-react';
 
 const Index = () => {
@@ -28,9 +29,9 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-screen">
+    <div className="min-h-screen bg-background flex flex-col">
+      <div className="container mx-auto px-4 py-8 flex-1">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-full">
           {/* Left Column - Channel Info + Form */}
           <div className="space-y-6">
             {/* Channel Header */}
@@ -74,6 +75,7 @@ const Index = () => {
         </div>
       </div>
 
+      <Footer />
       <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
     </div>
   );

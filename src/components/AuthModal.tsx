@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '@/hooks/useAuth';
 
 interface AuthModalProps {
@@ -14,6 +15,7 @@ interface AuthModalProps {
 export const AuthModal = ({ open, onOpenChange }: AuthModalProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const { signIn, signUp, signInWithGoogle } = useAuth();
 
   const handleSignIn = async (e: React.FormEvent) => {
@@ -26,10 +28,14 @@ export const AuthModal = ({ open, onOpenChange }: AuthModalProps) => {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!acceptedTerms) {
+      return; // No permitir registro sin aceptar términos
+    }
     await signUp(email, password);
     onOpenChange(false);
     setEmail('');
     setPassword('');
+    setAcceptedTerms(false);
   };
 
   const handleGoogleSignIn = async () => {
@@ -101,7 +107,33 @@ export const AuthModal = ({ open, onOpenChange }: AuthModalProps) => {
                   minLength={6}
                 />
               </div>
-              <Button type="submit" className="w-full">
+              <div className="flex items-start space-x-2">
+                <Checkbox
+                  id="accept-terms"
+                  checked={acceptedTerms}
+                  onCheckedChange={(checked) => setAcceptedTerms(checked === true)}
+                  required
+                />
+                <Label 
+                  htmlFor="accept-terms" 
+                  className="text-sm leading-5 cursor-pointer"
+                >
+                  Acepto recibir comunicaciones por correo electrónico y he leído la{' '}
+                  <a 
+                    href="/privacy" 
+                    className="text-primary hover:underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Política de Privacidad
+                  </a>
+                </Label>
+              </div>
+              <Button 
+                type="submit" 
+                className="w-full" 
+                disabled={!acceptedTerms}
+              >
                 Registrarse
               </Button>
             </form>
