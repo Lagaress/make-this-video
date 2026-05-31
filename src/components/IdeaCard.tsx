@@ -58,7 +58,6 @@ export const IdeaCard = ({ idea, voteCount, hasUserVoted, onVoteChange, onOpenAu
 
   const handleVote = async () => {
     if (!user) {
-      onOpenAuthModal();
       return;
     }
 
