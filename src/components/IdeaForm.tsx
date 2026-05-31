@@ -116,7 +116,6 @@ export const IdeaForm = ({ onIdeaSubmitted, onOpenAuthModal }: IdeaFormProps) =>
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Ej: Tutorial de React con Hooks"
-              required
             />
           </div>
           
